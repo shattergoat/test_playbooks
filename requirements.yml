@@ -2,10 +2,13 @@
 - name: Deploy OpenNebula AIO
   hosts: frontend
   become: true
+
   collections:
     - opennebula.deploy
 
   roles:
-    - role: opennebula.deploy.infra
-    - role: opennebula.deploy.opennebula
-    - role: opennebula.deploy.gui
+    - opennebula.deploy.precheck
+    - opennebula.deploy.infra
+    - opennebula.deploy.opennebula
+    - opennebula.deploy.gui
+    - opennebula.deploy.network
