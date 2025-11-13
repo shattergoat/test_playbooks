@@ -1,76 +1,39 @@
-# inventories/opennebula_aio.yml
-# Inventaire au format YAML pour OneDeploy OpenNebula.
-# Architecture : un seul frontend qui est aussi un nœud KVM (AIO).
-
 ---
 all:
   vars:
-    # Utilisateur SSH utilisé par AWX pour se connecter au serveur OpenNebula.
-    # - soit "root" avec clé/MDP
-    # - soit un user sudoer ("debian", "ansible", etc.) + become
     ansible_user: ansible
-
-    # On laisse become gérer la montée en privilèges si l'user n'est pas root.
     ansible_become: true
     ansible_become_method: sudo
 
-    # Version d'OpenNebula à installer (cf. compatibilité docs/forum).
-    # 7.0 est actuellement la version majeure récente supportée par OneDeploy. :contentReference[oaicite:3]{index=3}
-    one_version: '7.0'
+    one_version: "7.0"
+    one_pass: "N3twork!"
 
-    # Mot de passe de l'utilisateur "oneadmin" (à changer absolument).
-    one_pass: 'N3twork!'
-
-    # Ajoute automatiquement les hosts / IPs de l'inventaire dans /etc/hosts
-    # sur les nœuds, pratique quand tu as plusieurs hosts. Sur un AIO,
-    # ça ne gêne pas.
-    ensure_hosts: true
-
-    # Mode de datastore : "ssh" = stockage local sur chaque nœud,
-    # images répliquées depuis le frontend (référence "local storage"). :contentReference[oaicite:4]{index=4}
     ds:
       mode: ssh
 
-    # Définition du réseau virtuel OpenNebula "admin_net"
-    # Sur un AIO, on utilise l’interface principale du serveur (adapter PHYDEV !)
     vn:
       admin_net:
         managed: true
         template:
           VN_MAD: bridge
-
-          # INTERFACE PHYSIQUE DU SERVEUR OPENNEBULA
-          # ➜ fais un "ip a" sur 192.168.1.105 et mets ici le bon nom
-          #    (souvent "ens18", "enp0s3", "eth0"…)
           PHYDEV: eth1
-
-          # Nom du bridge Linux qui sera créé.
           BRIDGE: br0
-
           AR:
             TYPE: IP4
-            # Première IP de la plage assignable aux VMs
             IP: 192.168.1.150
-            # Nombre d'adresses dans la plage (ici 50 IPs : 150–199)
             SIZE: 50
-
-            # Adresse réseau / masque / gateway du LAN
             NETWORK_ADDRESS: 192.168.1.0
             NETWORK_MASK: 255.255.255.0
             GATEWAY: 192.168.1.1
-
-            # DNS utilisé par les VMs (ici Cloudflare, tu peux mettre ton DNS local)
             DNS: 1.1.1.1
 
-# Groupe FRONTEND : OpenNebula "controller" (Sunstone, oned, etc.)
-frontend:
-  hosts:
-    one-aio:
-      ansible_host: 192.168.1.105
+  children:
+    frontend:
+      hosts:
+        one-aio:
+          ansible_host: 192.168.1.105
 
-# Groupe NODE (hyperviseur KVM)
-# On met le même host que dans frontend pour avoir un AIO : frontend + KVM.
-node:
-  hosts:
-    one-aio:
-      ansible_host: 192.168.1.105
+    node:
+      hosts:
+        one-aio:
+          ansible_host: 192.168.1.105
