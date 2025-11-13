@@ -1,0 +1,7 @@
+# playbooks/deploy_opennebula_aio.yml
+# Playbook principal utilisé par AWX.
+# Il importe le playbook "opennebula.deploy.main" fourni par la collection opennebula.deploy.
+
+---
+- name: Import OneDeploy main playbook (OpenNebula AIO)
+  ansible.builtin.import_playbook: opennebula.deploy.main
