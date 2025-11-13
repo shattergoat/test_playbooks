@@ -8,7 +8,7 @@ all:
     # Utilisateur SSH utilisé par AWX pour se connecter au serveur OpenNebula.
     # - soit "root" avec clé/MDP
     # - soit un user sudoer ("debian", "ansible", etc.) + become
-    ansible_user: root
+    ansible_user: ansible
 
     # On laisse become gérer la montée en privilèges si l'user n'est pas root.
     ansible_become: true
@@ -19,7 +19,7 @@ all:
     one_version: '7.0'
 
     # Mot de passe de l'utilisateur "oneadmin" (à changer absolument).
-    one_pass: 'ChangeMoi123!'
+    one_pass: 'N3twork!'
 
     # Ajoute automatiquement les hosts / IPs de l'inventaire dans /etc/hosts
     # sur les nœuds, pratique quand tu as plusieurs hosts. Sur un AIO,
@@ -42,7 +42,7 @@ all:
           # INTERFACE PHYSIQUE DU SERVEUR OPENNEBULA
           # ➜ fais un "ip a" sur 192.168.1.105 et mets ici le bon nom
           #    (souvent "ens18", "enp0s3", "eth0"…)
-          PHYDEV: eth0
+          PHYDEV: eth1
 
           # Nom du bridge Linux qui sera créé.
           BRIDGE: br0
