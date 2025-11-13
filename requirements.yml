@@ -1,9 +1,11 @@
-# requirements.yml
-# Collections Ansible nécessaires pour utiliser OneDeploy/OpenNebula.
+---
+- name: Deploy OpenNebula AIO
+  hosts: frontend
+  become: true
+  collections:
+    - opennebula.deploy
 
-collections:
-  - name: opennebula.deploy    # Collection Galaxy officielle OneDeploy
-    # source: https://galaxy.ansible.com   # optionnel, Galaxy par défaut
-
-  # Tu peux ajouter d'autres collections si besoin plus tard, par ex. :
-  # - name: community.general
+  roles:
+    - role: opennebula.deploy.infra
+    - role: opennebula.deploy.opennebula
+    - role: opennebula.deploy.gui
